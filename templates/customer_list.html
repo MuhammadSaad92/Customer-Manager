@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'customer_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Search Customers</h2>
+<form method="get" class="search-form">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by name, email, or phone" class="search-input">
+    <button type="submit" class="search-btn">Search</button>
+</form>
+{% if customers %}
+    <table class="customer-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Equipment</th>
+                <th>Issue</th>
+                <th>Date of Booking</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.address }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.equipment }}</td>
+                <td>{{ customer.issue }}</td>
+                <td>{{ customer.date_of_booking }}</td>
+                <td class="actions">
+                    <a href="{% url 'customer_edit' customer.pk %}" class="edit-btn"><i class="fas fa-pen-to-square" aria-hidden="true"></i></a>
+                    <form method="post" action="{% url 'customer_delete' customer.pk %}" class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this customer?')"><i class="fas fa-trash-can" aria-hidden="true"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% elif query %}
+    <p class="no-results">No customers found.</p>
+{% endif %}
+{% endblock %}
