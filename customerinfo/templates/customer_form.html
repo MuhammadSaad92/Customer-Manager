@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'customer_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="form-title">{{ is_edit|yesno:"Edit Customer Information,Add Customer Information" }}</h2>
+
+    <form method="post" class="customer-form">
+        {% csrf_token %}
+        {% if errors %}
+            <div class="error">
+                <ul>
+                    {% for field, error in errors.items %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ name|default_if_none:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="4" required>{{ address|default_if_none:'' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="{{ phone|default_if_none:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ email|default_if_none:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="equipment">Equipment:</label>
+            <input type="text" id="equipment" name="equipment" value="{{ equipment|default_if_none:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="issue">Issue:</label>
+            <textarea id="issue" name="issue" rows="4" required>{{ issue|default_if_none:'' }}</textarea>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="submit-btn">{{ is_edit|yesno:"Update,Save" }}</button>
+            {% if is_edit %}
+                <a href="{% url 'customer_list' %}" class="cancel-btn">Cancel</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
